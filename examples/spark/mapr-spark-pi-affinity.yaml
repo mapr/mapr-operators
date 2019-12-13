@@ -28,7 +28,7 @@ spec:
   type: Scala
   sparkVersion: 2.4.4
   mode: cluster
-  image: gcr.io/mapr-hpe/spark-2.4.4:201912102008
+  image: gcr.io/mapr-hpe/spark-2.4.4:201912130932
   imagePullPolicy: Always
   mainClass: org.apache.spark.examples.SparkPi
   mainApplicationFile: "local:///opt/mapr/spark/spark-2.4.4/examples/jars/spark-examples_2.11-2.4.4.0-mapr-630.jar"

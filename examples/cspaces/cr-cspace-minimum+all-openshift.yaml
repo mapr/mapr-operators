@@ -5,7 +5,7 @@ metadata:
 spec:
   clusterName: mycluster
   clusterType: external
-  baseImageTag: "201912102008"
+  baseImageTag: "201912130932"
   imageRegistry: gcr.io/mapr-hpe
   externalClusterInfo:
     environmentType: openshift

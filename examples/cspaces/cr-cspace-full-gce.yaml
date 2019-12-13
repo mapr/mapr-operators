@@ -6,7 +6,7 @@ spec:
   clusterName: myexternalclustername
   clusterType: external
   systemUserSecret: system-user-secret
-  baseImageTag: "201912102008"
+  baseImageTag: "201912130932"
   imageRegistry: gcr.io/mapr-hpe
   imagePullSecret: mapr-imagepull-secrets
   logLocation: /var/log/mapr/externalcspace
@@ -31,19 +31,19 @@ spec:
   cspaceservices:
     terminal:
       count: 1
-      image: cspaceterminal-6.1.0:201912102008
+      image: cspaceterminal-6.1.0:201912130932
       requestcpu: "2000m"
       requestmemory: 8Gi
       logLevel: INFO
     hivemetastore:
       count: 1
-      image: hivemeta-2.3:201912102008
+      image: hivemeta-2.3:201912130932
       requestcpu: "2000m"
       requestmemory: 8Gi
       logLevel: INFO
     sparkhs:
       count: 1
-      image: spark-hs-2.4.4:201912102008
+      image: spark-hs-2.4.4:201912130932
       requestcpu: "2000m"
       requestmemory: 8Gi
       logLevel: INFO
