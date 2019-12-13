@@ -1,0 +1,571 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: cspaces.mke.hpe.com
+spec:
+  group: mke.hpe.com
+  names:
+    kind: CSpace
+    listKind: CSpaceList
+    plural: cspaces
+    singular: cspace
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: CSpace is the Schema for the cspaces API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: CSpaceSpec defines the desired state of CSpace
+          properties:
+            baseImageTag:
+              description: BaseImageTag. This tag (along with service name) will be
+                used to identify what images to pull unless overridden in a specific
+                package in CSpace service info
+              maxLength: 128
+              type: string
+            clusterName:
+              description: Cluster Name. Name of MapR Cluster. Also, Kubernetes namespace
+                for internal clusters. MUST BE PROVIDED
+              maxLength: 63
+              minLength: 4
+              type: string
+            clusterType:
+              description: Cluster Type. Type of kubernetes environment the cluster
+                will run in. MUST BE PROVIDED
+              enum:
+              - internal
+              - external
+              type: string
+            coreLocation:
+              description: Core Location. Root of directory to write core files on
+                host node. This directory must be writeable. Default if empty is /var/log/mapr/cores/.
+                This CSpace will create a subdirectory for itself under this root
+              maxLength: 3800
+              type: string
+            cspaceCustomizationFiles:
+              description: CSpace Customization Files. Set of template files used
+                to customize CSpace service pods
+              properties:
+                hiveMetastoreConfig:
+                  description: HiveMetastore ConfigMap. The name of a configmap template
+                    containing Hive Metastore config files in mapr-configuration.
+                    The default template provided is hivemetastore-cm. You can replace
+                    with your own
+                  maxLength: 253
+                  type: string
+                ldapClientConfig:
+                  description: LDAPClient ConfigMap. The name of a configmap template
+                    containing LDAP Client config file in mapr-configuration. The
+                    default template provided is ldapclient-cm. You can replace with
+                    your own
+                  maxLength: 253
+                  type: string
+                podSecurityPolicy:
+                  description: PodSecurityPolicy. CURRENTLY UNSUPPORTED. The name
+                    of a podsecuritypolicy template in mapr-configuration. The default
+                    template provided is cspace-PSP
+                  maxLength: 253
+                  type: string
+                role:
+                  description: Role. The name of a role template in mapr-configuration.
+                    The default template provided is cspace-role. You can replace
+                    with your own
+                  maxLength: 253
+                  type: string
+                sparkHSConfig:
+                  description: Spark History Server ConfigMap. The name of a configmap
+                    template containing Spark HistoryServer config files in mapr-configuration.
+                    The default template provided is sparkhistory-cm. You can replace
+                    with your own
+                  maxLength: 253
+                  type: string
+                sssdSecret:
+                  description: SSSD Secret. The name of a secret containing SSSD configuration
+                    information in mapr-configuration. This file along with LDAP Client
+                    is how you configure Kubernetes pods to use your LDAP or AD to
+                    validate users. The default template provided is sssd-secrets.
+                    You can replace with your own
+                  maxLength: 253
+                  type: string
+                terminalrole:
+                  description: TerminalRole. The name of a terminal role template
+                    in mapr-configuration. The default template provided is cspace-terminal-role.
+                    You can replace with your own
+                  maxLength: 253
+                  type: string
+                userrole:
+                  description: UserRole. The name of a user and group role template
+                    in mapr-configuration. The default template provided is cspace-user-role.
+                    You can replace with your own
+                  maxLength: 253
+                  type: string
+              type: object
+            cspaceservices:
+              description: CSpace Services. CSpace service pod info
+              properties:
+                hivemetastore:
+                  description: Hive Metastore CSpace Service. Starts a Hive Metastore
+                    for all jobs launched in CSpace
+                  properties:
+                    count:
+                      description: Pod Count. The number of instances of this pod
+                        that should be started at CSpace creation. Default if not
+                        provided is 0
+                      minimum: 0
+                      type: integer
+                    externalDBServer:
+                      description: External DB Server Location. CURRENTLY UNSUPPORTED.
+                        Location of the external database. Default is empty.
+                      maxLength: 253
+                      type: string
+                    image:
+                      description: Image Name. The full name of the image used for
+                        the pod's container. This overrides the base image tag. Default
+                        is to use the base image tag.
+                      maxLength: 128
+                      type: string
+                    ingresspath:
+                      description: Ingress Path. CURRENTLY UNSUPPORTED. The path used
+                        by external requests to indicate to the ingress server that
+                        it should route traffic to this pods service. Default if not
+                        provided is to use no Ingress Path
+                      maxLength: 253
+                      type: string
+                    limitcpu:
+                      description: CPU Limit. CURRENTLY UNSUPPORTED. The maximum cpu
+                        that the pod will be allowed to consume in a time slice before
+                        it is left unscheduled until the next slice. Default if not
+                        provided is 1000m or 1 CPU
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    limitdisk:
+                      description: Ephemeral Disk Limit. CURRENTLY UNSUPPORTED. The
+                        maximum amount of OS diskspace that the pod will be allowed
+                        to consume for logs, coredumps, and container images before
+                        pod is not allowed to write more data. Default if not provided
+                        is 20GB
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    limitmemory:
+                      description: Memory Limit. CURRENTLY UNSUPPORTED. The maximum
+                        amount of RAM that the pod will be allowed to consume before
+                        it is automatically OOMKilled. Default if not provided is
+                        8Gi
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    logLevel:
+                      description: Log Level. Log Level for this Pod. Overrides CSpace
+                        level setting. Default if not provided is to use CSpace settings.
+                      enum:
+                      - ERROR
+                      - INFO
+                      - DEBUG
+                      type: string
+                    requestcpu:
+                      description: CPU Requested. The amount of cpu that will be reserved
+                        on a node for the pod in milli CPU units. Default if not provided
+                        is 1000m or 1 CPU
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    requestdisk:
+                      description: Ephemeral Disk Requested. The amount of OS diskspace
+                        that will be reserved on a node for the pod for logs, coredumps,
+                        and container images. Default if not provided is 20GB
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    requestmemory:
+                      description: Memory Requested. The amount of RAM that will be
+                        reserved on the node for the pod. Default if not provided
+                        is 8Gi
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    sshPort:
+                      description: External SSH Port. CURRENTLY UNSUPPORTED. The port
+                        on the host node used to handle external ssh requests. Setting
+                        this port will limit scalability. Default if not provided
+                        is to use no external SSH Port
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                    useExternalDB:
+                      description: Use External DB. CURRENTLY UNSUPPORTED. Whether
+                        Hive Metastore should use an external database instead of
+                        Derby. Default if not provided is False or use Derby.
+                      type: boolean
+                  type: object
+                sparkhs:
+                  description: CSpace Spark History CSpace Service. Starts a Spark
+                    History Server for Spark Jobs launched in CSpace
+                  properties:
+                    count:
+                      description: Pod Count. The number of instances of this pod
+                        that should be started at CSpace creation. Default if not
+                        provided is 0
+                      minimum: 0
+                      type: integer
+                    image:
+                      description: Image Name. The full name of the image used for
+                        the pod's container. This overrides the base image tag. Default
+                        is to use the base image tag.
+                      maxLength: 128
+                      type: string
+                    ingresspath:
+                      description: Ingress Path. CURRENTLY UNSUPPORTED. The path used
+                        by external requests to indicate to the ingress server that
+                        it should route traffic to this pods service. Default if not
+                        provided is to use no Ingress Path
+                      maxLength: 253
+                      type: string
+                    limitcpu:
+                      description: CPU Limit. CURRENTLY UNSUPPORTED. The maximum cpu
+                        that the pod will be allowed to consume in a time slice before
+                        it is left unscheduled until the next slice. Default if not
+                        provided is 1000m or 1 CPU
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    limitdisk:
+                      description: Ephemeral Disk Limit. CURRENTLY UNSUPPORTED. The
+                        maximum amount of OS diskspace that the pod will be allowed
+                        to consume for logs, coredumps, and container images before
+                        pod is not allowed to write more data. Default if not provided
+                        is 20GB / +kubebuilder:validation:Pattern="^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$"
+                      type: string
+                    limitmemory:
+                      description: Memory Limit. CURRENTLY UNSUPPORTED. The maximum
+                        amount of RAM that the pod will be allowed to consume before
+                        it is automatically OOMKilled. Default if not provided is
+                        8Gi
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    logLevel:
+                      description: Log Level. Log Level for this Pod. Overrides CSpace
+                        level setting. Default if not provided is to use CSpace settings.
+                      enum:
+                      - ERROR
+                      - INFO
+                      - DEBUG
+                      type: string
+                    requestcpu:
+                      description: CPU Requested. The amount of cpu that will be reserved
+                        on a node for the pod in milli CPU units. Default if not provided
+                        is 500m or .5 CPU
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    requestdisk:
+                      description: Ephemeral Disk Requested. The amount of OS diskspace
+                        that will be reserved on a node for the pod for logs, coredumps,
+                        and container images. Default if not provided is 20GB
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    requestmemory:
+                      description: Memory Requested. The amount of RAM that will be
+                        reserved on the node for the pod. Default if not provided
+                        is 2Gi
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    sshPort:
+                      description: External SSH Port. CURRENTLY UNSUPPORTED. The port
+                        on the host node used to handle external ssh requests. Setting
+                        this port will limit scalability. Default if not provided
+                        is to use no external SSH Port
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                  type: object
+                terminal:
+                  description: CSpace Terminal CSpace Service. Starts a CSpace Terminal
+                    as a CLI interface for CSpace users
+                  properties:
+                    count:
+                      description: Pod Count. The number of instances of this pod
+                        that should be started at CSpace creation. Default if not
+                        provided is 0
+                      minimum: 0
+                      type: integer
+                    image:
+                      description: Image Name. The full name of the image used for
+                        the pod's container. This overrides the base image tag. Default
+                        is to use the base image tag.
+                      maxLength: 128
+                      type: string
+                    ingresspath:
+                      description: Ingress Path. CURRENTLY UNSUPPORTED. The path used
+                        by external requests to indicate to the ingress server that
+                        it should route traffic to this pods service. Default if not
+                        provided is to use no Ingress Path
+                      maxLength: 253
+                      type: string
+                    limitcpu:
+                      description: CPU Limit. CURRENTLY UNSUPPORTED. The maximum cpu
+                        that the pod will be allowed to consume in a time slice before
+                        it is left unscheduled until the next slice. Default if not
+                        provided is 1000m or 1 CPU
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    limitdisk:
+                      description: Ephemeral Disk Requested. The amount of OS diskspace
+                        that will be reserved on a node for the pod for logs, coredumps,
+                        and container images. Default if not provided is 20GB
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    limitmemory:
+                      description: Memory Limit. CURRENTLY UNSUPPORTED. The maximum
+                        amount of RAM that the pod will be allowed to consume before
+                        it is automatically OOMKilled. Default if not provided is
+                        8Gi
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    logLevel:
+                      description: Log Level. Log Level for this Pod. Overrides CSpace
+                        level setting. Default if not provided is to use CSpace settings.
+                      enum:
+                      - ERROR
+                      - INFO
+                      - DEBUG
+                      type: string
+                    requestcpu:
+                      description: CPU Requested. The amount of cpu that will be reserved
+                        on a node for the pod in milli CPU units. Default if not provided
+                        is 200m or .2 CPU
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    requestdisk:
+                      description: Ephemeral Disk Requested. The amount of OS diskspace
+                        that will be reserved on a node for the pod for logs, coredumps,
+                        and container images. Default if not provided is 20GB
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    requestmemory:
+                      description: Memory Requested. The amount of RAM that will be
+                        reserved on the node for the pod. Default if not provided
+                        is 8Gi
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    sshPort:
+                      description: External SSH Port. CURRENTLY UNSUPPORTED. The port
+                        on the host node used to handle external ssh requests. Setting
+                        this port will limit scalability. Default if not provided
+                        is to use no external SSH Port
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                  type: object
+              required:
+              - hivemetastore
+              - sparkhs
+              - terminal
+              type: object
+            debugging:
+              description: Debug Info. Settings pertaining to debugging
+              properties:
+                logLevel:
+                  description: 'Log Level - Change logging level of all CSpace service
+                    containers. Choices are ERROR, INFO, and DEBUG. Note: DEBUG will
+                    generate much additional log churn. Default if not provided is
+                    INFO'
+                  enum:
+                  - ERROR
+                  - INFO
+                  - DEBUG
+                  type: string
+                preserveFailedPods:
+                  description: Preserve Failed Pods. Try to avoid kubernetes restarting
+                    of failing pods. This behavior is not guaranteed for all errors.
+                    This setting is useful during debugging but should be false in
+                    other circumstances to enhance availability. Default is false
+                    or not to preserve pods
+                  type: boolean
+                wipeLogs:
+                  description: Wipe Logs. Remove logs at startup for container. This
+                    can assist avoiding old logs. This flag will be ignored if hostid
+                    file is present already on host Default is false or not to wipe
+                    logs
+                  type: boolean
+              type: object
+            externalClusterInfo:
+              description: External Cluster Info. Settings pertaining to external
+                MapR cluster
+              properties:
+                dnsdomain:
+                  description: DNS Domain. Domain name for kubernetes pods. Default
+                    value is cluster.local
+                  maxLength: 253
+                  type: string
+                environmentType:
+                  description: 'Environment Type. The Type of Kubernetes environment
+                    that this CSpace will run in. Legal values are currently: gce,
+                    vanilla, and openshift'
+                  enum:
+                  - gce
+                  - azure
+                  - aws
+                  - vanilla
+                  - openshift
+                  - rancheros
+                  - microos
+                  type: string
+                externalClientSecret:
+                  description: External Client Secret. Name of secret in mapr-external-info
+                    containing client info for external cluster. Configmap usually
+                    generated by gen-external-secrets.sh. Default value is mapr-client-secrets
+                  maxLength: 253
+                  type: string
+                externalConfigMap:
+                  description: External Configmap. Name of configmap in mapr-external-info
+                    containing external server info for external cluster. Configmap
+                    usually generated by gen-external-secrets.sh. Default value is
+                    mapr-external-cm
+                  maxLength: 253
+                  type: string
+                externalHiveSiteConfigMap:
+                  description: External Hivesite Configmap. Name of configmap that
+                    contains hivesite info for a hivemetastore on an external data
+                    cluster. Configmap usually generated by gen-external-secrets.sh.
+                    Default value is mapr-hivesite-external-cm
+                  maxLength: 253
+                  type: string
+                externalServerSecret:
+                  description: External Server Secret. Name of secret in mapr-external-info
+                    containing external server info for external cluster. Configmap
+                    usually generated by gen-external-secrets.sh. Default value is
+                    mapr-server-secrets
+                  maxLength: 253
+                  type: string
+                externalUserSecret:
+                  description: External User Secret. Name of secret in mapr-external-info
+                    containing user info for external cluster. Configmap usually generated
+                    by gen-external-secrets.sh. Default value is mapr-user-secrets
+                  maxLength: 253
+                  type: string
+                sshSecret:
+                  description: SSH Secret. CURRENTLY UNSUPPORTED. Used to replace
+                    generated SSH Keys. Default value is mapr-ssh-secrets
+                  maxLength: 253
+                  type: string
+                useSSSD:
+                  description: Use SSSD. Use SSSD to connect to corporate directory
+                    or use raw linux users in pods. Default value is false
+                  type: boolean
+              required:
+              - environmentType
+              type: object
+            groupList:
+              description: Group List. List of Groups for CSpace
+              items:
+                type: string
+              maxItems: 10
+              minItems: 0
+              type: array
+            imagePullSecret:
+              description: Image Pull Secret. Name of secret located in mapr-system
+                used to pull images from registry. It should contain login info for
+                the registry. This should ALWAYS be provided in unless pulling images
+                from an open registry. The default secret is named mapr-imagepull-secrets
+              maxLength: 253
+              type: string
+            imageRegistry:
+              description: Image Registry. Location to pull images. This should ALWAYS
+                be provided in unless pulling images from Docker Hub
+              maxLength: 255
+              type: string
+            logLocation:
+              description: Log Location. Root of logging directory on host node. This
+                directory must be writeable. Default if empty is /var/log/mapr/. This
+                CSpace will create a subdirectory for itself under this root
+              maxLength: 3800
+              type: string
+            maprVersion:
+              description: MapRVersion. INTERNAL MAPR USE ONLY. Please leave empty.
+              maxLength: 50
+              type: string
+            mepVersion:
+              description: MEPVersion. INTERNAL MAPR USE ONLY. Please leave empty.
+              maxLength: 50
+              type: string
+            podInfoLocation:
+              description: Pod Info Location. Root of directory to store misc podinfo
+                on host node. This directory must be writeable. Default if empty is
+                /var/log/mapr/podinfo/. This CSpace will create a subdirectory for
+                itself under this root
+              maxLength: 3800
+              type: string
+            quotas:
+              description: Quotas. Various Quota Settings
+              properties:
+                resourcequotas:
+                  description: Resource Quotas. Quotas for physical resources
+                  properties:
+                    cpu:
+                      description: CPU Limit. All pods running in this CSpace including
+                        CSpace Services cannot exceed this threshold
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                    memory:
+                      description: Memory Limit.  All pods running in CSpace including
+                        CSpace Services cannot exceed this threshold
+                      pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                      type: string
+                  required:
+                  - cpu
+                  - memory
+                  type: object
+              required:
+              - resourcequotas
+              type: object
+            userList:
+              description: User List. List of Users for CSpace
+              items:
+                type: string
+              maxItems: 100
+              minItems: 0
+              type: array
+          required:
+          - baseImageTag
+          - clusterName
+          - clusterType
+          - imageRegistry
+          - quotas
+          type: object
+        status:
+          description: CSpaceStatus defines the observed state of CSpace
+          properties:
+            componentstate:
+              description: State of the CSPace Terminal
+              properties:
+                hivemetastoredeploymentstate:
+                  description: State of the Hive Metastore Service
+                  type: string
+                namespacestate:
+                  description: State of the CSPace Namespace
+                  type: string
+                sparkhistorydeploymentstate:
+                  description: State of the Spark History Server
+                  type: string
+                terminaldeploymentstate:
+                  description: State of the CSPace Terminal
+                  type: string
+              type: object
+            state:
+              description: Overall CSpace State
+              type: string
+          type: object
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true

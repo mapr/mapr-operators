@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: csi-nodeplugin-kdf
+  namespace: mapr-csi
+spec:
+  selector:
+    matchLabels:
+      app: csi-nodeplugin-kdf
+  template:
+    metadata:
+      labels:
+        app: csi-nodeplugin-kdf
+    spec:
+      serviceAccount: csi-nodeplugin-sa
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      imagePullSecrets:
+        - name: mapr-imagepull-secrets
+      containers:
+        - name: driver-registrar
+          ## FIXME: Remove privileged escalation
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+          image: quay.io/k8scsi/csi-node-driver-registrar:v1.0.1
+          imagePullPolicy: "Always"
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+            - --mode=node-register
+            - --driver-requires-attachment=false
+            - --pod-info-mount-version="v1"
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/com.mapr.csi-kdf/csi.sock
+          env:
+            - name: ADDRESS
+              value: /plugin/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /plugin
+            - name: registration-dir
+              mountPath: /registration
+        - name: liveness-probe
+          ## FIXME: Remove privileged escalation
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+          image: quay.io/k8scsi/livenessprobe:v1.0.2
+          imagePullPolicy: "Always"
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+            - "--connection-timeout=60s"
+            - "--health-port=9808"
+          env:
+            - name: ADDRESS
+              value: /plugin/csi.sock
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /plugin
+        - name: mapr-kdf
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["SYS_ADMIN"]
+            allowPrivilegeEscalation: true
+          image: registry.hub.docker.com/maprtech/csi-kdfplugin:latest
+          imagePullPolicy: "Always"
+          args :
+            - "--nodeid=$(NODE_ID)"
+            - "--endpoint=$(CSI_ENDPOINT)"
+            - "-v=5"
+          env:
+            - name: NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: CSI_ENDPOINT
+              value: unix://plugin/csi.sock
+          ports:
+            - containerPort: 9808
+              name: healthz
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 5
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /plugin
+            - name: pods-mount-dir
+              mountPath: /var/lib/origin/openshift.local.volumes/pods/
+              mountPropagation: "Bidirectional"
+            - name: k8s-log-dir
+              mountPath: /var/log/csi-maprkdf
+            - name: timezone
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        - name: plugin-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins/com.mapr.csi-kdf
+            type: DirectoryOrCreate
+        - name: registration-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins_registry
+            type: Directory
+        - name: pods-mount-dir
+          hostPath:
+            path: /var/lib/origin/openshift.local.volumes/pods/
+            type: Directory
+        - name: k8s-log-dir
+          hostPath:
+            path: /var/log/csi-maprkdf
+            type: DirectoryOrCreate
+        - name: timezone
+          hostPath:
+            path: /etc/localtime

@@ -1,0 +1,55 @@
+apiVersion: mke.hpe.com/v1
+kind: CSpace
+metadata:
+  name: mycspace
+spec:
+  clusterName: myexternalclustername
+  clusterType: external
+  systemUserSecret: system-user-secret
+  baseImageTag: "201912102008"
+  imageRegistry: gcr.io/mapr-hpe
+  imagePullSecret: mapr-imagepull-secrets
+  logLocation: /var/log/mapr/externalcspace
+  coreLocation: /var/log/mapr/externalcspace/cores
+  podinfoLocation: /var/log/mapr/podinfo
+  externalClusterInfo:
+    environmentType: gce
+    dnsdomain: cluster.local
+    useSSSD: false
+    externalUserSecret: mapr-user-secrets
+    externalConfigMap: mapr-external-cm
+    externalHiveSiteConfigMap: mapr-hivesite-cm
+    externalServerSecret: mapr-server-secrets
+    externalClientSecret: mapr-client-secrets
+  quotas:
+    resourcequotas:
+      cpu: "50000m"
+      memory: 2000Gi
+  debugging:
+    logLevel: INFO
+    preserveFailedPods: true
+  cspaceservices:
+    terminal:
+      count: 1
+      image: cspaceterminal-6.1.0:201912102008
+      requestcpu: "2000m"
+      requestmemory: 8Gi
+      logLevel: INFO
+    hivemetastore:
+      count: 1
+      image: hivemeta-2.3:201912102008
+      requestcpu: "2000m"
+      requestmemory: 8Gi
+      logLevel: INFO
+    sparkhs:
+      count: 1
+      image: spark-hs-2.4.4:201912102008
+      requestcpu: "2000m"
+      requestmemory: 8Gi
+      logLevel: INFO
+  userList:
+    - user1
+    - user2
+  groupList:
+    - group1
+    - group2

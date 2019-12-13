@@ -1,0 +1,22 @@
+apiVersion: mke.hpe.com/v1
+kind: CSpace
+metadata:
+  name: mycspace
+spec:
+  clusterName: mycluster
+  clusterType: external
+  baseImageTag: "201912102008"
+  imageRegistry: gcr.io/mapr-hpe
+  externalClusterInfo:
+    environmentType: openshift
+  quotas:
+    resourcequotas:
+      cpu: "50000m"
+      memory: 2000Gi
+  cspaceservices:
+    terminal:
+      count: 1
+    hivemetastore:
+      count: 1
+    sparkhs:
+      count: 1

@@ -1,0 +1,36 @@
+%YAML 1.2
+---
+# Config for logging
+# ------------------
+# See http://docs.python.org/2.7/library/logging.config.html#configuration-dictionary-schema
+logging:
+  version: 1
+  disable_existing_loggers: true
+
+  root:
+    level: !!python/name:logging.NOTSET
+    handlers: [logFileHandler]
+
+  loggers:
+    fileLogger:
+      handlers: [logFileHandler]
+      qualname: file_logger
+      propagate: false
+
+  handlers:
+    logFileHandler:
+      class: common.mapr_logger.InstanceRotatingFileHandler
+      backupCount: 10
+      encoding: utf-8
+      filename: logger.log
+      formatter: logFormatter
+      # To change the log level for the bootstrapper, change the word INFO below to one of the following:
+      # DEBUG, INFO, WARN, ERROR
+      level: !!python/name:logging.INFO
+      rollover: false
+
+  formatters:
+    logFormatter:
+      class: logging.Formatter
+      format: '%(asctime)-15s : %(levelname)s : %(message)s'
+      datefmt: '%Y-%m-%d %H:%M:%S'

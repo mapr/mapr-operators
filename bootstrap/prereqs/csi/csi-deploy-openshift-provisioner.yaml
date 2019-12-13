@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: csi-provisioner-kdf
+  namespace: mapr-csi
+spec:
+  serviceName: "csi-provisioner"
+  selector:
+    matchLabels:
+      app: csi-provisioner-kdf
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: csi-provisioner-kdf
+    spec:
+      serviceAccount: csi-provisioner-sa
+      imagePullSecrets:
+        - name: mapr-imagepull-secrets
+      containers:
+        - name: csi-attacher
+          image: quay.io/k8scsi/csi-attacher:v1.0.1
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          imagePullPolicy: "Always"
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/lib/csi/sockets/pluginproxy/
+        - name: csi-provisioner
+          image: quay.io/k8scsi/csi-provisioner:v1.0.1
+          args:
+            - "--provisioner=com.mapr.csi-kdf"
+            - "--csi-address=$(ADDRESS)"
+            - "--volume-name-prefix=mapr-pv"
+            - "--v=5"
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          imagePullPolicy: "Always"
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/lib/csi/sockets/pluginproxy/
+        - name: csi-snapshot
+          image: quay.io/k8scsi/csi-snapshotter:v1.0.1
+          imagePullPolicy: "Always"
+          args:
+            - "--snapshotter=com.mapr.csi-kdf"
+            - "--csi-address=$(ADDRESS)"
+            - "--snapshot-name-prefix=mapr-snapshot"
+            - "--v=5"
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/lib/csi/sockets/pluginproxy/
+        - name: liveness-probe
+          image: quay.io/k8scsi/livenessprobe:v1.0.1
+          imagePullPolicy: "Always"
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+            - "--connection-timeout=60s"
+            - "--health-port=9809"
+          env:
+            - name: ADDRESS
+              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /var/lib/csi/sockets/pluginproxy/
+        - name: kdf-provisioner
+          ## FIXME: Remove privileged escalation
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: true
+          image: registry.hub.docker.com/maprtech/csi-kdfprovisioner:latest
+          imagePullPolicy: "Always"
+          args :
+            - "--nodeid=$(NODE_ID)"
+            - "--endpoint=$(CSI_ENDPOINT)"
+            - "-v=5"
+          env:
+            - name: NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: CSI_ENDPOINT
+              value: unix://plugin/csi.sock
+          ports:
+            - containerPort: 9809
+              name: healthz
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 5
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /plugin
+            - name: k8s-log-dir
+              mountPath: /var/log/csi-maprkdf
+            - name: timezone
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        - name: socket-dir
+          emptyDir: {}
+        - name: k8s-log-dir
+          hostPath:
+            path: /var/log/csi-maprkdf
+            type: DirectoryOrCreate
+        - name: timezone
+          hostPath:
+            path: /etc/localtime

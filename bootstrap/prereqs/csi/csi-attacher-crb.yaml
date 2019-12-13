@@ -1,0 +1,14 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: csi-attacher-crb
+  namespace: mapr-csi
+subjects:
+  - kind: ServiceAccount
+    name: csi-provisioner-sa
+    namespace: mapr-csi
+roleRef:
+  kind: ClusterRole
+  name: csi-attacher-cr
+  apiGroup: rbac.authorization.k8s.io
+  

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cspaceoperator
+  namespace: mapr-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cspaceoperator
+  template:
+    metadata:
+      labels:
+        app: cspaceoperator
+    spec:
+      serviceAccountName: cspaceoperator-sa
+      automountServiceAccountToken: true
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: "app"
+                  operator: In
+                  values:
+                  - cspaceoperator
+              topologyKey: "kubernetes.io/hostname"
+      imagePullSecrets:
+        - name: mapr-imagepull-secrets
+      containers:
+      - name: cspaceoperator
+        imagePullPolicy: Always
+        image: gcr.io/mapr-hpe/cspaceoperator-1.0.0:201912102200
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 500m
+        command:
+        - /usr/local/bin/cspace-operator
+        args:
+        - --zap-level=debug
+        env:
+        - name : WATCH_NAMESPACE
+          value: ""
+        - name: POD_NAME
+          valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        - name : OPERATOR_NAME
+          value: "cspace-operator"
+        - name : K8S_TYPE
+          value: "openshift"

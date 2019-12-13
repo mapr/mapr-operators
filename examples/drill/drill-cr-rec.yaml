@@ -1,0 +1,14 @@
+apiVersion: mke.hpe.com/v1
+kind: DrillCluster
+metadata:
+  name: drillcluster3
+spec:
+  cspace: externalcspace
+  imageregistry: gcr.io/mapr-hpe
+  image: drill-1.16.0:latest
+  count: 4
+  maxcount: 8
+  memory: 16Gi
+  cpu: 16000m
+  cputhreshold: 75
+  podtimeout: 600

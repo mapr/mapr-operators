@@ -1,0 +1,19 @@
+apiVersion: mke.hpe.com/v1
+kind: DrillCluster
+metadata:
+  name: drillcluster1
+spec:
+  cspace: externalcspace
+  imageregistry: gcr.io/mapr-hpe
+  image: drill-1.15.0:latest
+  count: 2
+  maxcount: 8
+  disablesecurity: false
+  memory: 8Gi
+  cpu: 4000m
+  cputhreshold: 20
+  clusterid: cluster1
+  httpport: 8047
+  userport: 31010
+  podtimeout: 600
+  loglevel: DEBUG

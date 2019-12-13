@@ -1,0 +1,8 @@
+apiVersion: mke.hpe.com/v1
+kind: DrillCluster
+metadata:
+  name: drillcluster2
+spec:
+  cspace: externalcspace
+  imageregistry: gcr.io/mapr-hpe
+  image: drill-1.14.0:latest
