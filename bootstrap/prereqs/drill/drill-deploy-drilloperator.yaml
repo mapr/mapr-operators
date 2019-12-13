@@ -19,7 +19,7 @@ spec:
         - name: mapr-imagepull-secrets
       containers:
       - name: drill-operator
-        image: gcr.io/mapr-hpe/drill-operator-1.0.0:latest-AG
+        image: gcr.io/mapr-hpe/drill-operator-1.0.0:latest
         imagePullPolicy: Always
         resources:
           requests:
