@@ -5,7 +5,7 @@ metadata:
 spec:
   clusterName: mycluster
   clusterType: external
-  baseImageTag: "201912130932"
+  baseImageTag: "201912131811"
   imageRegistry: gcr.io/mapr-hpe
   externalClusterInfo:
     environmentType: gce
@@ -16,6 +16,7 @@ spec:
   cspaceservices:
     terminal:
       count: 1
+      sshPort: 7777
     hivemetastore:
       count: 1
     sparkhs:
