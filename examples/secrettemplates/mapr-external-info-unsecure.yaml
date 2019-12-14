@@ -9,9 +9,9 @@ date:
   clusterid: >-
     <clusterid>
   MAPR_CLUSTER: >-
-    gce1.cluster.com
+    <clustername>
   clustername: >-
-    gce1.cluster.com
+    <clustername>
   SECURE_CLUSTER: >-
     true
   disableSecurity: >-

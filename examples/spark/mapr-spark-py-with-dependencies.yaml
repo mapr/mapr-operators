@@ -29,7 +29,7 @@ spec:
   sparkVersion: 2.4.4
   pythonVersion: "3"
   mode: cluster
-  image: gcr.io/mapr-hpe/spark-py-2.4.4:201912131811
+  image: gcr.io/mapr-hpe/spark-py-2.4.4:201912141350
   imagePullPolicy: Always
   mainApplicationFile: local:///maprfs-csi/path/to/main/file/app.py
   deps:
@@ -45,7 +45,7 @@ spec:
     memory: "512m"
     labels:
       version: 2.4.4
-    serviceAccount: <Name of cspace service account> # example - mapr-externalcspace-cspace-sa
+    serviceAccount: <Name of cspace service account> # example - mapr-mycspace-cspace-sa
     volumeMounts:
       - name: maprfs-volume
         mountPath: /maprfs-csi

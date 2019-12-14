@@ -21,17 +21,16 @@ metadata:
   namespace: <Name of cspace> # example - externalcspace
 spec:
   sparkConf:
-    spark.mapr.cluster.configMap: mapr-cluster-cm
     spark.mapr.user.secret: <Name of users secret> # example - mapr-user-secret-123456
     spark.eventLog.enabled: "true"
     spark.eventLog.dir: "maprfs:///apps/spark/<Name of cspace>" # example - maprfs:///apps/spark/externalcspace
   type: Scala
   sparkVersion: 2.4.4
   mode: cluster
-  image: gcr.io/mapr-hpe/spark-2.4.4:201912131811
+  image: gcr.io/mapr-hpe/spark-2.4.4:201912141350
   imagePullPolicy: Always
   mainClass: org.apache.spark.examples.sql.hive.SparkHiveExample
-  mainApplicationFile: "local:///opt/mapr/spark/spark-2.4.4/examples/jars/spark-examples_2.11-2.4.4.0-mapr-630.jar"
+  mainApplicationFile: "local:///opt/mapr/spark/spark-2.4.4/examples/jars/spark-examples_2.11-2.4.4.1-mapr-630.jar"
   restartPolicy:
     type: Never
   imagePullSecrets:
@@ -46,7 +45,7 @@ spec:
     - name: hive-site-volume
       mountPath: /opt/mapr/spark/spark-2.4.4/conf/hive-site.xml
       subPath: hive-site.xml
-    serviceAccount: <Name of cspace service account> # example - mapr-externalcspace-cspace-sa
+    serviceAccount: <Name of cspace service account> # example - mapr-mycspace-cspace-sa
   executor:
     cores: 1
     instances: 2

@@ -3,10 +3,10 @@ kind: CSpace
 metadata:
   name: mycspace
 spec:
-  clusterName: myexternalclustername
+  clusterName: <clustername>
   clusterType: external
   systemUserSecret: system-user-secret
-  baseImageTag: "201912131811"
+  baseImageTag: "201912141350"
   imageRegistry: gcr.io/mapr-hpe
   imagePullSecret: mapr-imagepull-secrets
   logLocation: /var/log/mapr/externalcspace
@@ -31,23 +31,31 @@ spec:
   cspaceservices:
     terminal:
       count: 1
-      image: cspaceterminal-6.1.0:201912131811
+      image: cspaceterminal-6.1.0:201912141350
       sshPort: 7777
       requestcpu: "2000m"
       requestmemory: 8Gi
       logLevel: INFO
     hivemetastore:
       count: 1
-      image: hivemeta-2.3:201912131811
+      image: hivemeta-2.3:201912141350
       requestcpu: "2000m"
       requestmemory: 8Gi
       logLevel: INFO
     sparkhs:
       count: 1
-      image: spark-hs-2.4.4:201912131811
+      image: spark-hs-2.4.4:201912141350
       requestcpu: "2000m"
       requestmemory: 8Gi
       logLevel: INFO
+  cspaceCustomizationFiles:
+    sssdSecret: sssd-secrets
+    ldapClientConfig: ldapclient-cm
+    sparkHSConfig: sparkhistory-cm
+    hiveMetastoreConfig: hivemetastore-cm
+    role: cspace-role
+    terminalrole: cspace-terminal-role
+    userrole: cspace-user-role
   userList:
     - user1
     - user2

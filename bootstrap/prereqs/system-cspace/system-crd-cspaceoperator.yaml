@@ -356,10 +356,10 @@ spec:
                       pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                       type: string
                     sshPort:
-                      description: External SSH Port. CURRENTLY UNSUPPORTED. The port
-                        on the host node used to handle external ssh requests. Setting
-                        this port will limit scalability. Default if not provided
-                        is to use no external SSH Port
+                      description: External SSH Port. The port on the host node used
+                        to handle external ssh requests. Setting this port will limit
+                        scalability. Default if not provided is to use no external
+                        SSH Port
                       maximum: 65535
                       minimum: 1
                       type: integer
@@ -544,19 +544,19 @@ spec:
           description: CSpaceStatus defines the observed state of CSpace
           properties:
             componentstate:
-              description: State of the CSPace Terminal
+              description: State of the CSpace Terminal
               properties:
                 hivemetastoredeploymentstate:
                   description: State of the Hive Metastore Service
                   type: string
                 namespacestate:
-                  description: State of the CSPace Namespace
+                  description: State of the CSpace Namespace
                   type: string
                 sparkhistorydeploymentstate:
                   description: State of the Spark History Server
                   type: string
                 terminaldeploymentstate:
-                  description: State of the CSPace Terminal
+                  description: State of the CSpace Terminal
                   type: string
               type: object
             state:
