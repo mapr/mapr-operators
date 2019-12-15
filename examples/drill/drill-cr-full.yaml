@@ -14,6 +14,6 @@ spec:
   cputhreshold: 20
   clusterid: cluster1
   httpport: 8047
-  userport: 31010
+  userport: 21010
   podtimeout: 600
   loglevel: DEBUG
