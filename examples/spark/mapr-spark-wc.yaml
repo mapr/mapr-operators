@@ -21,7 +21,6 @@ metadata:
   namespace: <Name of cspace> # example - externalcspace
 spec:
   sparkConf:
-    spark.mapr.cluster.configMap: mapr-cluster-cm
     spark.mapr.user.secret: <Name of users secret> # example - mapr-user-secret-123456
     spark.eventLog.enabled: "true"
     spark.eventLog.dir: "maprfs:///apps/spark/<Name of cspace>" # example - maprfs:///apps/spark/externalcspace
