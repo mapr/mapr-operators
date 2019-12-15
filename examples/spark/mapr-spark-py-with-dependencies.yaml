@@ -28,7 +28,7 @@ spec:
   sparkVersion: 2.4.4
   pythonVersion: "3"
   mode: cluster
-  image: gcr.io/mapr-hpe/spark-py-2.4.4:201912142210
+  image: gcr.io/mapr-hpe/spark-py-2.4.4:201912150057
   imagePullPolicy: Always
   mainApplicationFile: local:///maprfs-csi/path/to/main/file/app.py
   deps:
