@@ -5,4 +5,4 @@ metadata:
 spec:
   cspace: mycspace
   imageregistry: gcr.io/mapr-hpe
-  image: drill-1.14.0:latest
+  image: drill-1.15.0:latest
