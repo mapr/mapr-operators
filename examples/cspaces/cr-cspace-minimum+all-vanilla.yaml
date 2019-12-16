@@ -5,7 +5,7 @@ metadata:
 spec:
   clusterName: <clustername>
   clusterType: external
-  baseImageTag: "201912150057"
+  baseImageTag: "201912151750"
   imageRegistry: gcr.io/mapr-hpe
   externalClusterInfo:
     environmentType: vanilla
