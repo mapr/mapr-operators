@@ -418,7 +418,8 @@ EOF
 create_hivesite_configmap() {
   HIVE_DIR=$MAPR_HOME/hive
   if [ -d $HIVE_DIR ]; then
-    HIVE_HOME=$(ls -d $HIVE_DIR/hive-*)
+    HIVE_VERSION=$(cat $HIVE_DIR/hiveversion)
+    HIVE_HOME=$HIVE_DIR/hive-$HIVE_VERSION
     HIVESITE_FILE=$HIVE_HOME/conf/hive-site.xml
     if [ -f $HIVESITE_FILE ]; then
         # hive-site.xml
