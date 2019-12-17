@@ -99,7 +99,7 @@ class Cloud(object):
     @staticmethod
     def check_available():
         available_instances = dict()
-        for cloud_name, cloud_instance in Cloud._cloud_instances.iteritems():
+        for cloud_name, cloud_instance in Cloud._cloud_instances.items():
             if cloud_instance.is_available():
                 Log.debug("{0} cloud is available".format(cloud_name))
                 available_instances[cloud_name] = cloud_instance

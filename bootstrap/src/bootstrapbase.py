@@ -9,7 +9,8 @@ from common.prompts import Prompts
 from validators.python_validator import PythonValidator
 from validators.validator import Validator
 
-BOOTSTRAP_BUILD_VERSION_NO = "Development"
+# TODO: This needs to be change with every public release. Hopefully we automate this in the future.
+BOOTSTRAP_BUILD_VERSION_NO = "1.0.0"
 
 
 class BootstrapBase(object):
@@ -62,7 +63,7 @@ class BootstrapBase(object):
     def prologue(self):
         title = os.linesep + "MapR for Kubernetes Bootstrap "
         title += "Installer" if self.is_install is True else "Uninstaller"
-        title += " (version {0})".format(BOOTSTRAP_BUILD_VERSION_NO)
+        title += " (Version {0})".format(BOOTSTRAP_BUILD_VERSION_NO)
         Log.info(title, True)
         Log.info("Copyright 2019 MapR Technologies, Inc., All Rights Reserved", True)
         Log.info("https://mapr.com/legal/eula/", True)
