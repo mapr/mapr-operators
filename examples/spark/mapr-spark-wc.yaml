@@ -27,7 +27,7 @@ spec:
   type: Java
   sparkVersion: 2.4.4
   mode: cluster
-  image: gcr.io/mapr-hpe/spark-2.4.4:201912151750
+  image: gcr.io/mapr-hpe/spark-2.4.4:201912180140
   imagePullPolicy: Always
   mainClass: org.apache.spark.examples.JavaWordCount
   mainApplicationFile: "local:///opt/mapr/spark/spark-2.4.4/examples/jars/spark-examples_2.11-2.4.4.1-mapr-630.jar"

@@ -75,7 +75,6 @@ class BootstrapInstall(BootstrapBase):
 
         nl = NodeLabels(k8s)
         nl.process_labels()
-
         if install_storage:
             self.validate_nodes()
             k8s.install_bootstrap_components()

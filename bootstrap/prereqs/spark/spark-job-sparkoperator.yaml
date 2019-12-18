@@ -20,6 +20,6 @@ spec:
       restartPolicy: Never
       containers:
       - name: main
-        image: gcr.io/mapr-hpe/spark-operator-2.4.4:201912131903
+        image: gcr.io/mapr-hpe/spark-operator-2.4.4:201912161350
         imagePullPolicy: IfNotPresent
         command: ["/usr/bin/gencerts.sh", "-p"]

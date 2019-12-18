@@ -57,6 +57,7 @@ class BootstrapUninstall(BootstrapBase):
         # Check if the connected k8s environment is Openshift
         if k8s.is_openshift_connected():
             k8s.is_openshift = True
+            k8s.switch_to_oc()
         if uninstall_cspaces:
             k8s.uninstall_system_cspace_components()
         if uninstall_storage:

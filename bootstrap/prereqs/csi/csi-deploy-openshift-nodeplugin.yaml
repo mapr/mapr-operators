@@ -19,19 +19,16 @@ spec:
         - name: mapr-imagepull-secrets
       containers:
         - name: driver-registrar
-          ## FIXME: Remove privileged escalation
-          securityContext:
-            privileged: true
-            allowPrivilegeEscalation: true
           image: quay.io/k8scsi/csi-node-driver-registrar:v1.0.1
           imagePullPolicy: "Always"
           args:
             - "--v=5"
             - "--csi-address=$(ADDRESS)"
-            - --mode=node-register
-            - --driver-requires-attachment=false
-            - --pod-info-mount-version="v1"
-            - --kubelet-registration-path=/var/lib/kubelet/plugins/com.mapr.csi-kdf/csi.sock
+            - "--kubelet-registration-path=/var/lib/kubelet/plugins/com.mapr.csi-kdf/csi.sock"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "rm -rf /registration/com.mapr.csi-kdf /registration/com.mapr.csi-kdf-reg.sock"]
           env:
             - name: ADDRESS
               value: /plugin/csi.sock
@@ -45,10 +42,6 @@ spec:
             - name: registration-dir
               mountPath: /registration
         - name: liveness-probe
-          ## FIXME: Remove privileged escalation
-          securityContext:
-            privileged: true
-            allowPrivilegeEscalation: true
           image: quay.io/k8scsi/livenessprobe:v1.0.2
           imagePullPolicy: "Always"
           args:
@@ -73,6 +66,7 @@ spec:
           args :
             - "--nodeid=$(NODE_ID)"
             - "--endpoint=$(CSI_ENDPOINT)"
+            - "--maxvolumepernode=20"
             - "-v=5"
           env:
             - name: NODE_ID
@@ -97,7 +91,7 @@ spec:
             - name: plugin-dir
               mountPath: /plugin
             - name: pods-mount-dir
-              mountPath: /var/lib/origin/openshift.local.volumes/pods/
+              mountPath: /var/lib/kubelet/pods
               mountPropagation: "Bidirectional"
             - name: k8s-log-dir
               mountPath: /var/log/csi-maprkdf

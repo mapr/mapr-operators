@@ -28,7 +28,7 @@ spec:
   sparkVersion: 2.4.4
   pythonVersion: "3"
   mode: cluster
-  image: gcr.io/mapr-hpe/spark-py-2.4.4:201912151750
+  image: gcr.io/mapr-hpe/spark-py-2.4.4:201912180140
   imagePullPolicy: Always
   mainApplicationFile: local:///opt/mapr/spark/spark-2.4.4/examples/src/main/python/wordcount.py
   restartPolicy:
