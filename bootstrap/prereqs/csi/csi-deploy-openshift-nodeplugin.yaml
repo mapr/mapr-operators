@@ -115,7 +115,7 @@ spec:
             type: Directory
         - name: pods-mount-dir
           hostPath:
-            path: /var/lib/origin/openshift.local.volumes/pods/
+            path: /var/lib/kubelet/pods
             type: Directory
         - name: k8s-log-dir
           hostPath:
