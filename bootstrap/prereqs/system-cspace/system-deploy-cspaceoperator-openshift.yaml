@@ -32,7 +32,7 @@ spec:
       containers:
       - name: cspaceoperator
         imagePullPolicy: Always
-        image: gcr.io/mapr-hpe/cspaceoperator-1.0.0:201912172205
+        image: gcr.io/mapr-hpe/cspaceoperator-1.0.0:201912181435
         resources:
           requests:
             memory: 1Gi

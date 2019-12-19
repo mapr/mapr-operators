@@ -5,7 +5,7 @@ metadata:
   namespace: mapr-configuration-cspaces
 rules:
 - apiGroups: [""]
-  resources: ["pods", "pods/log", "pods/exec"]
+  resources: ["pods", "pods/log"]
   verbs: ["*"]
 - apiGroups: [""]
   resources: ["configmaps"]

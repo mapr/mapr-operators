@@ -46,9 +46,6 @@ spec:
             cputhreshold:
               type: integer
               description: "Drill CPU Threshold for Autoscale"
-            clusterid:
-              type: string
-              description: "Drill Cluster ID"
             httpport:
               type: integer
               description: "Drill HTTP Port"
@@ -77,3 +74,4 @@ spec:
             - cspace
             - imageregistry
             - image
+
