@@ -1,9 +1,6 @@
-Copyright 2019 MapR Technologies, Inc., All Rights Reserved
-https://mapr.com/legal/eula/
-
 # MapR Kubernetes Ecosystem 1.0 Release Notes   
 These notes describe the first release of the MapR Kubernetes Ecosystem.
-You may also be interested in the [Kubernetes Release Notes] (https://kubernetes.io/docs/setup/release/notes/)
+You may also be interested in the [Kubernetes Release Notes](https://kubernetes.io/docs/setup/release/notes/)
 
 ### Version:
 1.0                            
@@ -22,7 +19,7 @@ Kubernetes 1.13, 1.14, 1.15, and 1.16.
 4.1
 
 ### CSI Driver Compatibility          
-Version 1.0. For more information, see MapR Container Storage Interface (CSI) [Storage Plugin Release Notes] (http://info-dev.lab/docs/61wMEP63wFC/CSIdriver/csi_driver_1.0_release_notes.html)
+Version 1.0. For more information, see MapR Container Storage Interface (CSI) [Storage Plugin Release Notes](http://info-dev.lab/docs/61wMEP63wFC/CSIdriver/csi_driver_1.0_release_notes.html)
 
 ### Supported Operators  
 MapR Drill 1.15 and 1.16
@@ -32,7 +29,7 @@ MapR Spark 2.4.4
 MapR Kubernetes Ecosystem Overview
 
 ## Related Resources  
-[Kubernetes Data Fabric-CSI] (https://mapr.com/solutions/data-fabric/kubernetes/)
+[Kubernetes Data Fabric-CSI](https://mapr.com/solutions/data-fabric/kubernetes/)
 
 
 ## New in this Release  
@@ -56,3 +53,6 @@ K8S-1060: Spark driver attempts to connect to ZooKeeper via hostname lookup. If 
 
 ## Resolved Issues   
 None
+
+Copyright 2019 MapR Technologies, Inc., All Rights Reserved
+https://mapr.com/legal/eula/
