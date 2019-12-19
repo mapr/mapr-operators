@@ -2,19 +2,19 @@
 
 This repository contains the code needed to install and use the various operators for MapR products. It currently contains the bootstrap code and examples for the MapR Kubernetes Ecosystem. These operators include:
 
-* CSpace Operator - An operator used to create CSpace to run comput applications against MapR
+* CSpace Operator - An operator used to create CSpace to run compute applications against MapR
 * Spark Operator - An operator used to launch Spark jobs
 * Drill Operator - An operator used to create Drill clusters
 
 # Directories  
 
-* Bootstrap - Contains code to install operators in your Kubernetes environment.
+* Bootstrap - Contains code to install operators in your Kubernetes environment
 * Examples - Example Custom Resources for the MapR Operators
 * Tools - Various scripts to simplify working with the MapR Operators
 
 # Documentation  
 
-[MapR Kubernetes Ecosystem](http:/mapr.com)
+[MapR Kubernetes Ecosystem](https://mapr.com/docs/home/PersistentStorage/mdfk_fc_overview.html)
 
 # MapR Kubernetes Ecosystem 1.0 Release Notes   
 
