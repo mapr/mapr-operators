@@ -45,6 +45,8 @@ class Log(object):
     _file_logger = None
     _console_logger = None
     _console_level = logging.NOTSET
+    _warning_count = None
+    _error_count = None
 
     @staticmethod
     def initialize(config_filename, log_filename, file_level=None, console_level=None, rollover=True):
@@ -79,6 +81,8 @@ class Log(object):
         Log._file_logger = logging.getLogger('fileLogger')
         # Log._console_logger = logging.getLogger('consoleLogger')
         Log._log_filename = log_filename
+        Log._warning_count = 0
+        Log._error_count = 0
 
     @staticmethod
     def get_log_filename():
@@ -97,6 +101,8 @@ class Log(object):
         logging.shutdown()
         Log._file_logger = None
         Log._console_logger = None
+        Log._warning_count = 0
+        Log._error_count = 0
 
         if Log._log_filename is not None:
             os.chmod(Log._log_filename, stat.S_IRUSR)
@@ -123,22 +129,34 @@ class Log(object):
     def warning(msg, *args, **kwargs):
         print("WARNING: {0}".format(msg))
         Log._log(logging.WARNING, msg, args, **kwargs)
+        Log._warning_count += 1
 
     @staticmethod
     def error(msg, *args, **kwargs):
         print("ERROR: {0}".format(msg))
         Log._log(logging.ERROR, msg, args, **kwargs)
+        Log._error_count += 1
 
     @staticmethod
     def critical(msg, *args, **kwargs):
         print("CRITICAL: {0}".format(msg))
         Log._log(logging.CRITICAL, msg, args, **kwargs)
+        Log._error_count += 1
 
     @staticmethod
     def exception(msg, *args, **kwargs):
         kwargs['exc_info'] = 1
         print("EXCEPTION: {0}".format(msg))
         Log._log(logging.ERROR, msg, args, **kwargs)
+        Log._error_count += 1
+
+    @staticmethod
+    def get_error_count():
+        return Log._error_count
+
+    @staticmethod
+    def get_warning_count():
+        return Log._warning_count
 
     @staticmethod
     def _find_caller():

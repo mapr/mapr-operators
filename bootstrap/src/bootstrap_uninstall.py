@@ -143,7 +143,29 @@ class BootstrapUninstall(BootstrapBase):
     @staticmethod
     def complete_uninstallation():
         print(os.linesep)
-        Log.info("Installation deleted successfully!", True)
+        
+        msg = "This Kubernetes environment"
+        warnings = Log.get_warning_count()
+        errors = Log.get_error_count()
+
+        if errors > 0 and warnings > 0:
+            msg = "{0} had {1} error(s) and {2} warning(s) during the uninstall process for MapR".format(msg, errors, warnings)
+            Log.error(msg)
+        elif errors > 0 and warnings == 0:
+            msg = "{0} had {1} error(s) during the uninstall process for MapR".format(msg, errors)
+            Log.error(msg)
+        elif errors == 0 and warnings > 0:
+            msg = "{0} had {1} warnings(s) during the uninstall process for MapR".format(msg, warnings)
+            Log.warning(msg)
+        else:
+            msg = "{0} has had MapR successfully uninstalled".format(msg)
+            Log.info(msg, True)
+
+        if errors > 0 or warnings > 0:
+            msg = "Please check the bootstrap log file for this session here: {0}".format(Log.get_log_filename())
+            Log.warning(msg)
+
+        Log.info("")
 
 
 bootstrap_uninstall = BootstrapUninstall()

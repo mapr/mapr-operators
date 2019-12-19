@@ -280,8 +280,29 @@ class BootstrapInstall(BootstrapBase):
     @staticmethod
     def complete_installation():
         print(os.linesep)
-        Log.info("This Kubernetes environment has been successfully bootstrapped for MapR", True)
-        Log.info("MapR components can now be created via the newly installed operators", True)
+
+        msg = "This Kubernetes environment"
+        warnings = Log.get_warning_count()
+        errors = Log.get_error_count()
+
+        if errors > 0 and warnings > 0:
+            msg = "{0} had {1} error(s) and {2} warning(s) during the bootstraping process for MapR".format(msg, errors, warnings)
+            Log.error(msg)
+        elif errors > 0 and warnings == 0:
+            msg = "{0} had {1} error(s) during the bootstraping process for MapR".format(msg, errors)
+            Log.error(msg)
+        elif errors == 0 and warnings > 0:
+            msg = "{0} had {1} warnings(s) during the bootstraping process for MapR".format(msg, warnings)
+            Log.warning(msg)
+        else:
+            msg = "{0} has been successfully bootstrapped for MapR".format(msg)
+            Log.info(msg, True)
+            Log.info("MapR components can now be created via the newly installed operators", True)
+
+        if errors > 0 or warnings > 0:
+            msg = "Please check the bootstrap log file for this session here: {0}".format(Log.get_log_filename())
+            Log.warning(msg)
+
         Log.info("")
 
     @staticmethod
