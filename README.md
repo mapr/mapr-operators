@@ -16,7 +16,7 @@ Compatible with MapR 5.2.2, 6.0.1, and 6.1.0
 
 ### Kubernetes Compatibility
 Kubernetes 1.13, 1.14, 1.15, and 1.16.  
-* Kubernetes alpha features are not supported.
+*Kubernetes alpha features are not supported.
 
 ### OpenShift Compatibility      
 4.1
