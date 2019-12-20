@@ -3,9 +3,9 @@ kind: DrillCluster
 metadata:
   name: drillcluster1
 spec:
-  cspace: mycspace
+  cspace: <Name of cspace>
   imageregistry: gcr.io/mapr-hpe
-  image: drill-1.16.0:latest
+  image: drill-1.16.0:201912180140
   count: 2
   maxcount: 4
   disablesecurity: false
