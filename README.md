@@ -1,6 +1,6 @@
 # Introduction
 
-This repository contains the code needed to install and use the various operators for MapR products. It currently contains the bootstrap code and examples for the MapR Kubernetes Ecosystem. These operators include:
+This repository contains the code needed to install and use the various operators for MapR products. It currently contains the bootstrap code and examples for the MapR Kubernetes Ecosystem 1.0. These operators include:
 
 * CSpace Operator - An operator used to create CSpace to run compute applications against MapR
 * Spark Operator - An operator used to launch Spark jobs
