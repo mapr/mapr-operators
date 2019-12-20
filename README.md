@@ -38,7 +38,7 @@ Kubernetes 1.13, 1.14, 1.15, and 1.16.
 4.1
 
 ### CSI Driver Compatibility          
-Version 1.0. For more information, see MapR Container Storage Interface (CSI) [Storage Plugin Release Notes](http://info-dev.lab/docs/61wMEP63wFC/CSIdriver/csi_driver_1.0_release_notes.html)
+Version 1.0. For more information, see MapR Container Storage Interface (CSI) [Storage Plugin Release Notes](https://mapr.com/docs/home/CSIdriver/csi_driver_1.0_release_notes.html)
 
 ### Supported Operators  
 MapR Drill 1.15 and 1.16
