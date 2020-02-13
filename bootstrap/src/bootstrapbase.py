@@ -10,7 +10,7 @@ from validators.python_validator import PythonValidator
 from validators.validator import Validator
 
 # TODO: This needs to be change with every public release. Hopefully we automate this in the future.
-BOOTSTRAP_BUILD_VERSION_NO = "1.0.0"
+BOOTSTRAP_BUILD_VERSION_NO = "1.0.0.1 MKE"
 
 
 class BootstrapBase(object):
